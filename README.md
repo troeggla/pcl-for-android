@@ -5,20 +5,20 @@
 
 ## Tested setup
 
-* Ubuntu 18.04 (probably any other Linux machine too)
+* macOS
 * conan 1.16.1
 * pcl build needs with 8 Cores, ~14GB RAM and around 15 min compile time.
 
 ## Install
 
 ```
-sudo apt install cmake git make ninja python3-pip
+brew install cmake git make python3
 ```
 
-Install [conan](https://docs.conan.io/en/latest/installation.html)
+Install [conan](https://docs.conan.io/en/latest/installation.html) and ninja
 
 ```
-sudo pip3 install conan
+pip3 install conan ninja
 ```
 
 ## Cross-compilation
