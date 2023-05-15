@@ -10,7 +10,7 @@ class AndroidToolchainConan(ConanFile):
     license = "Apache License 2.0"
 
     def source(self):
-        tools.get("https://dl.google.com/android/repository/android-ndk-{}-linux-x86_64.zip".format(self.version), keep_permissions=True)
+        tools.get("https://dl.google.com/android/repository/android-ndk-{}-darwin-x86_64.zip".format(self.version), keep_permissions=True)
 
     def package(self):
         self.copy("*")
