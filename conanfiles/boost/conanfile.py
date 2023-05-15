@@ -28,7 +28,7 @@ class BoostConan(ConanFile):
     def _configure_user_config(self) -> None:
         if str(self.settings.arch) == "armv7": ext = "eabi"
         else: ext = ""
-        path_to_clang_compiler = "{}/toolchains/llvm/prebuilt/linux-x86_64/bin/{}-linux-android{}{}-clang++".format(self.deps_env_info["android-toolchain"].ANDROID_NDK_HOME, self._to_android_arch(str(self.settings.arch)), ext, self.settings.os.api_level)
+        path_to_clang_compiler = "{}/toolchains/llvm/prebuilt/darwin-x86_64/bin/{}-linux-android{}{}-clang++".format(self.deps_env_info["android-toolchain"].ANDROID_NDK_HOME, self._to_android_arch(str(self.settings.arch)), ext, self.settings.os.api_level)
         print("Compiler: {}".format(path_to_clang_compiler))
         compiler_flags = "-fPIC -std=c++11 -stdlib=libc++"
         user_config = "using clang : androidos : {}\n: <cxxflags>\"{}\"\n;".format(path_to_clang_compiler, compiler_flags)

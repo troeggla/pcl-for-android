@@ -63,7 +63,7 @@ class PclConan(ConanFile):
     def requirements(self):
         self.requires("boost/1.70.0@bashbug/stable")
         self.requires("flann/1.9.1@bashbug/stable") # > 1.8.5 have lz4 issue: https://github.com/mariusmuja/flann/issues/384
-        self.requires("eigen/3.3.7@conan/stable")
+        self.requires("eigen/3.3.7")
 
     def source(self):
         git = tools.Git(folder=self.name)
