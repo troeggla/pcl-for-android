@@ -1,4 +1,5 @@
-from conans import ConanFile, tools
+from conan import ConanFile
+from conan.tools import files
 
 
 class BoostConan(ConanFile):
@@ -28,11 +29,14 @@ class BoostConan(ConanFile):
     def _configure_user_config(self) -> None:
         if str(self.settings.arch) == "armv7": ext = "eabi"
         else: ext = ""
+
         path_to_clang_compiler = "{}/toolchains/llvm/prebuilt/darwin-x86_64/bin/{}-linux-android{}{}-clang++".format(self.deps_env_info["android-toolchain"].ANDROID_NDK_HOME, self._to_android_arch(str(self.settings.arch)), ext, self.settings.os.api_level)
         print("Compiler: {}".format(path_to_clang_compiler))
+
         compiler_flags = "-fPIC -std=c++11 -stdlib=libc++"
         user_config = "using clang : androidos : {}\n: <cxxflags>\"{}\"\n;".format(path_to_clang_compiler, compiler_flags)
         path_to_user_config = "{}/{}/tools/build/src/user-config.jam".format(self.build_folder, self.folder_name)
+
         file = open(path_to_user_config, "w")
         file.write(user_config)
         file.close()
@@ -45,10 +49,10 @@ class BoostConan(ConanFile):
         self.run(b2_comd)
 
     def source(self):
-        tools.get("https://boostorg.jfrog.io/artifactory/main/release/{}/source/{}.tar.gz".format(self.version, self.folder_name))
+        files.get(self, "https://boostorg.jfrog.io/artifactory/main/release/{}/source/{}.tar.gz".format(self.version, self.folder_name))
 
     def build(self):
-        with tools.chdir(self.folder_name):
+        with files.chdir(self, self.folder_name):
             self._configure_user_config()
             self._configure_boost()
             self._build_boost()
@@ -58,4 +62,4 @@ class BoostConan(ConanFile):
         self.copy(pattern="*", dst="include/boost", src="{}/boost".format(self.folder_name))
 
     def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.libs = files.collect_libs(self)
