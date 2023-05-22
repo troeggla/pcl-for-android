@@ -34,7 +34,7 @@ class Lz4Conan(ConanFile):
 
     def source(self):
         git = tools.scm.Git(self)
-        git.clone("https://github.com/lz4/lz4.git")
+        git.fetch_commit("https://github.com/lz4/lz4.git", "v1.9.1")
 
     def build(self):
         cmake = tools.cmake.CMake(self)
@@ -44,7 +44,7 @@ class Lz4Conan(ConanFile):
 
     def package(self):
         tools.files.copy(self, pattern="*.a", dst=path.join(self.package_folder, "lib"), src=self.source_folder)
-        tools.files.copy(self, pattern="lz4.h", dst=path.join(self.package_folder, "include"), src=path.join(self.source_folder, self.name, "lib"))
+        tools.files.copy(self, pattern="lz4.h", dst=path.join(self.package_folder, "include"), src=path.join(self.source_folder, "lib"))
 
     def package_info(self):
         self.cpp_info.libs = tools.files.collect_libs(self)
