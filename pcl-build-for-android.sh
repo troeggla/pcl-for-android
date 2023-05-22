@@ -10,12 +10,6 @@ if [ ! -f "conan-profiles/${PROFILE}" ] ; then
 fi
 
 echo -e "\n\n\033[1;35m###########################################"
-echo -e "### ANDROID-TOOLCHAIN setup...          ###"
-echo -e "###########################################\033[m\n\n"
-
-conan create -pr default conanfiles/android-toolchain bashbug/stable
-
-echo -e "\n\n\033[1;35m###########################################"
 echo -e "### FLANN cross-compiling start...      ###"
 echo -e "###########################################\033[m\n\n"
 
