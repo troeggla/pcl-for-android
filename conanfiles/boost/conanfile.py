@@ -92,10 +92,6 @@ class BoostConan(ConanFile):
             self._build_boost()
 
     def package(self):
-        print("BUILD DIR:", self.build_folder)
-        print("PACKAGE DIR:", self.package_folder)
-        print("FOLDER:", self.folder_name)
-
         files.copy(self, pattern="*.a", dst=path.join(self.package_folder, "lib"), src="{}/{}/lib".format(self.folder_name, self.settings.arch))
         files.copy(self, pattern="*", dst=path.join(self.package_folder , "include/boost"), src="{}/boost".format(self.folder_name))
 
