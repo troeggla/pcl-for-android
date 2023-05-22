@@ -1,5 +1,7 @@
 from conan import ConanFile
 from conan.tools import files
+from typing import Optional
+from os import path
 
 
 class BoostConan(ConanFile):
@@ -12,25 +14,52 @@ class BoostConan(ConanFile):
     folder_name = "boost_{}".format(version.replace(".", "_"))
 
     def _to_android_arch(self, arch: str) -> str:
-        if arch == "armv7": return "armv7a"
-        if arch == "armv8": return "aarch64"
+        if arch == "armv7":
+            return "armv7a"
+        if arch == "armv8":
+            return "aarch64"
+
         return arch
 
-    def _to_android_address_model(self, arch: str) -> str:
-        if arch == "armv7": return "32"
-        if arch == "armv8" or arch == "x86_64": return "64"
+    def _to_android_address_model(self, arch: str) -> Optional[str]:
+        if arch == "armv7":
+            return "32"
+        if arch == "armv8" or arch == "x86_64":
+            return "64"
+
         return None
 
-    def _to_boost_arch(self, arch: str) -> str:
-        if arch.startswith("arm") or arch == "aarch64": return "arm"
-        if arch.startswith("x86"): return "x86"
+    def _to_boost_arch(self, arch: str) -> Optional[str]:
+        if arch.startswith("arm") or arch == "aarch64":
+            return "arm"
+        if arch.startswith("x86"):
+            return "x86"
+
         return None
+
+    def _get_build_os(self, os: str):
+        os = str(os).lower()
+
+        if os == "macos":
+            return "darwin"
+
+        return os
 
     def _configure_user_config(self) -> None:
-        if str(self.settings.arch) == "armv7": ext = "eabi"
-        else: ext = ""
+        if str(self.settings.arch) == "armv7":
+            ext = "eabi"
+        else:
+            ext = ""
 
-        path_to_clang_compiler = "{}/toolchains/llvm/prebuilt/darwin-x86_64/bin/{}-linux-android{}{}-clang++".format(self.deps_env_info["android-toolchain"].ANDROID_NDK_HOME, self._to_android_arch(str(self.settings.arch)), ext, self.settings.os.api_level)
+        build_os = self._get_build_os(self.settings_build.os)
+        ndk_path = self.conf.get("tools.android:ndk_path")
+        path_to_clang_compiler = "{}/toolchains/llvm/prebuilt/{}-x86_64/bin/{}-linux-android{}{}-clang++".format(
+            ndk_path,
+            build_os,
+            self._to_android_arch(str(self.settings.arch)),
+            ext, self.settings.os.api_level
+        )
+
         print("Compiler: {}".format(path_to_clang_compiler))
 
         compiler_flags = "-fPIC -std=c++11 -stdlib=libc++"
@@ -45,7 +74,12 @@ class BoostConan(ConanFile):
         self.run("./bootstrap.sh")
 
     def _build_boost(self) -> None:
-        b2_comd = "./b2 link=static variant=release threading=multi --without-python --debug-configuration --abbreviate-paths architecture={} --stagedir={} target-os=android address-model={} abi=aapcs".format(self._to_boost_arch(str(self.settings.arch)), self.settings.arch, self._to_android_address_model(str(self.settings.arch)))
+        b2_comd = "./b2 link=static variant=release threading=multi --without-python --debug-configuration --abbreviate-paths architecture={} --stagedir={} target-os=android address-model={} abi=aapcs".format(
+            self._to_boost_arch(str(self.settings.arch)),
+            self.settings.arch,
+            self._to_android_address_model(str(self.settings.arch))
+        )
+
         self.run(b2_comd)
 
     def source(self):
@@ -58,8 +92,12 @@ class BoostConan(ConanFile):
             self._build_boost()
 
     def package(self):
-        self.copy(pattern="*.a", dst="lib", src="{}/{}/lib".format(self.folder_name, self.settings.arch))
-        self.copy(pattern="*", dst="include/boost", src="{}/boost".format(self.folder_name))
+        print("BUILD DIR:", self.build_folder)
+        print("PACKAGE DIR:", self.package_folder)
+        print("FOLDER:", self.folder_name)
+
+        files.copy(self, pattern="*.a", dst=path.join(self.package_folder, "lib"), src="{}/{}/lib".format(self.folder_name, self.settings.arch))
+        files.copy(self, pattern="*", dst=path.join(self.package_folder , "include/boost"), src="{}/boost".format(self.folder_name))
 
     def package_info(self):
         self.cpp_info.libs = files.collect_libs(self)
