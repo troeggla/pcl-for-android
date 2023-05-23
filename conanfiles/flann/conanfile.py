@@ -5,6 +5,8 @@ from os import path
 class FlannConan(ConanFile):
     name = "flann"
     version = "1.9.1"
+    user = "pcl-android"
+    channel = "stable"
     settings = "os", "compiler", "arch", "build_type"
     description = "Conan package for flann library"
     url = "http://www.cs.ubc.ca/research/flann/"
@@ -46,7 +48,7 @@ class FlannConan(ConanFile):
         toolchain.generate()
 
     def requirements(self):
-        self.requires("lz4/1.9.1")
+        self.requires("lz4/1.9.1@pcl-android/stable")
 
     def source(self):
         git = tools.scm.Git(self)

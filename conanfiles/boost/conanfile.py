@@ -9,6 +9,8 @@ class BoostConan(ConanFile):
     version = "1.70.0"
     settings = "os", "compiler", "arch", "build_type"
     description = "Conan package for boost library"
+    user = "pcl-android"
+    channel = "stable"
     url = "https://www.boost.org/"
     license = "Boost Software License"
     folder_name = "boost_{}".format(version.replace(".", "_"))

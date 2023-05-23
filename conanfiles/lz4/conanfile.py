@@ -5,6 +5,8 @@ from os import path
 class Lz4Conan(ConanFile):
     name = "lz4"
     version = "1.9.1"
+    user = "pcl-android"
+    channel = "stable"
     settings = "os", "compiler", "arch", "build_type"
     description = "Conan package for lz4 library"
     url = "https://github.com/lz4/lz4/"
