@@ -4,7 +4,7 @@ from os import path
 
 class PclConan(ConanFile):
     name = "pcl"
-    version = "1.9.1"
+    version = "1.13.0"
     settings = "os", "compiler", "arch", "build_type"
     description = "Conan Package for pcl"
     user = "pcl-android"
