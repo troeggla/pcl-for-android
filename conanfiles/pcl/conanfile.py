@@ -82,9 +82,6 @@ class PclConan(ConanFile):
             f"{self.name}-{self.version}"
         )
 
-        tools.files.patch(self, patch_file="no_except.patch") # >= boost version 1.70 https://github.com/PointCloudLibrary/pcl/commit/5605910a26f299cb53bd792e923598b3aa5bbc18
-        tools.files.patch(self, patch_file="pcl_binaries.patch")
-
     def build(self):
         cmake = self._configure_cmake()
         cmake.build()
