@@ -5,14 +5,13 @@
 
 ## Tested setup
 
-* macOS
-* conan 1.16.1
-* pcl build needs with 8 Cores, ~14GB RAM and around 15 min compile time.
+* Ubuntu 22.04
+* conan 2.0.4
 
 ## Install
 
 ```
-brew install cmake git make python3
+apt install cmake git make python3
 ```
 
 Install [conan](https://docs.conan.io/en/latest/installation.html) and ninja
@@ -22,28 +21,35 @@ pip3 install conan ninja
 ```
 
 ## Cross-compilation
-For arm64-v8a with Android NDK r20:
+
+For arm64-v8a with Android NDK r25c:
+
 - flann 1.9.1
 - lz4 1.9.1
 - boost 1.70.0
-- PCL 1.9.1 (Eigen 3.3.7 gets automatically installed)
+- PCL 1.13.0 (Eigen 3.3.7 gets automatically installed)
 
 ### arm64-v8a
+
 ```
 ./pcl-build-for-android.sh arm64-v8a
 ```
 
 ### armeabi-v7a
+
 NOTE: "Starting August 1, 2019, your apps published on Google Play will need to support 64-bit architectures." (see https://developer.android.com/distribute/best-practices/develop/64-bit)
 ```
 ./pcl-build-for-android.sh armeabi-v7a
 ```
 
 ### x86_64 (emulator)
+
 ```
 ./pcl-build-for-android.sh x86_64
 ```
+
 ## Example-app
+
 Set in app/build.gradle the abiFilters depending for which architectures you have cross-compiled.
 The default setup is arm64-v8a:
 ```
