@@ -69,7 +69,7 @@ class BoostConan(ConanFile):
     homepage = "https://www.boost.org"
     license = "BSL-1.0"
     topics = ("libraries", "cpp")
-    version = "1.80.0"
+    version = "1.76.0"
 
     settings = "os", "arch", "compiler", "build_type"
     options = {
@@ -1252,7 +1252,41 @@ class BoostConan(ConanFile):
             contents += "\nusing mpi ;"
 
         # Specify here the toolset with the binary if present if don't empty parameter :
-        contents += f'\nusing "{self._toolset}" : {self._toolset_version} : '
+        # contents += f'\nusing "{self._toolset}" : {self._toolset_version} : '
+
+        if str(self.settings.arch) == "armv7":
+            ext = "eabi"
+        else:
+            ext = ""
+
+        def _to_android_arch(arch: str) -> str:
+            if arch == "armv7":
+                return "armv7a"
+            if arch == "armv8":
+                return "aarch64"
+
+            return arch
+
+        def _to_build_os(os):
+            if os == "Macos":
+                return "darwin"
+            elif os == "Linux":
+                return "linux"
+
+            return os
+
+        ndk_path = self.conf.get("tools.android:ndk_path")
+        path_to_clang_compiler = "{}/toolchains/llvm/prebuilt/{}-x86_64/bin/{}-linux-android{}{}-clang++".format(
+            ndk_path,
+            _to_build_os(self.settings_build.os),
+            _to_android_arch(str(self.settings.arch)),
+            ext,
+            self.settings.os.api_level
+        )
+        print("Compiler: {}".format(path_to_clang_compiler))
+
+        compiler_flags = "-fPIC -std=c++11 -stdlib=libc++"
+        contents += "\nusing clang : androidos : {}\n: <cxxflags>\"{}\"\n;".format(path_to_clang_compiler, compiler_flags)
 
         cxx_fwd_slahes = self._cxx.replace("\\", "/")
         if cxx_fwd_slahes:
@@ -1264,7 +1298,7 @@ class BoostConan(ConanFile):
             if self.settings.get_safe("arch"):
                 contents += f" -arch {to_apple_arch(self)}"
 
-        contents += " : \n"
+        # contents += " : \n"
         if self._ar:
             ar_path = self._ar.replace("\\", "/")
             contents += f'<archiver>"{ar_path}" '
@@ -1304,7 +1338,7 @@ class BoostConan(ConanFile):
         if self._is_apple_embedded_platform:
             contents += f'<target-os>"{self._b2_os}" '
 
-        contents += " ;"
+        # contents += " ;"
 
         self.output.warning(contents)
         filename = f"{folder}/user-config.jam"
