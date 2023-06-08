@@ -5,7 +5,8 @@
 
 ## Tested setup
 
-* Ubuntu 22.04
+* Ubuntu 22.04, macOS 13.1
+* Android SDK 25
 * conan 2.0.4
 
 ## Install
