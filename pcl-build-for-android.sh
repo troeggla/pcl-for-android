@@ -2,10 +2,10 @@
 
 set -e
 
-PROFILE=${1}
+ARCH=${1}
 
-if [ ! -f "conan-profiles/${PROFILE}" ] ; then
-  echo "${PROFILE} not supported!"
+if [ $# -ne 1 ]; then
+  echo "USAGE: $0 arch"
   exit 1
 fi
 
@@ -13,8 +13,8 @@ echo -e "\n\n\033[1;35m###########################################"
 echo -e "### FLANN cross-compiling start...      ###"
 echo -e "###########################################\033[m\n\n"
 
-conan create -pr conan-profiles/${PROFILE} conanfiles/lz4 bashbug/stable
-conan create -pr conan-profiles/${PROFILE} conanfiles/flann bashbug/stable
+conan create conanfiles/lz4 --profile android -s arch=$ARCH --build=missing
+conan create conanfiles/flann --profile android -s arch=$ARCH --build=missing
 
 echo "FLANN cross-compiling finished!"
 
@@ -22,7 +22,7 @@ echo -e "\n\n\033[1;35m###########################################"
 echo -e "### BOOST cross-compiling start...      ###"
 echo -e "###########################################\033[m\n\n"
 
-conan create -pr conan-profiles/${PROFILE} conanfiles/boost bashbug/stable
+conan create conanfiles/boost --profile android -s arch=$ARCH --build=missing
 
 echo "BOOST cross-compiling finished!"
 
@@ -30,16 +30,6 @@ echo -e "\n\n\033[1;35mm###########################################"
 echo -e "### PCL cross-compiling start...        ###"
 echo -e "###########################################\033[m\n\n"
 
-echo -e "\n\n\033[1;32m this will run for a while... time to drink a\n"
-echo -e "   ( ( "
-echo -e "    ) ) "
-echo -e "  ........ "
-echo -e "  |      |] "
-echo -e "  \      /  "
-echo -e "   '----' \033[m\n\n"
-
-conan create -pr conan-profiles/${PROFILE} conanfiles/pcl bashbug/stable
-
-cp conan-profiles/${PROFILE} ~/.conan/profiles
+conan create conanfiles/pcl --profile android -s arch=$ARCH --build=missing
 
 echo "PCL cross-compiling finished!"
