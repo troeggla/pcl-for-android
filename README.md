@@ -24,28 +24,21 @@ pip3 install conan ninja
 
 For arm64-v8a with Android NDK r25c:
 
-- flann 1.9.1
-- lz4 1.9.1
-- boost 1.70.0
+- flann 1.9.2
+- lz4 1.9.4
+- boost 1.76.0
 - PCL 1.13.0 (Eigen 3.3.7 gets automatically installed)
 
 ### arm64-v8a
 
 ```
-./pcl-build-for-android.sh arm64-v8a
+./pcl-build-for-android.sh armv8
 ```
 
 ### armeabi-v7a
 
-NOTE: "Starting August 1, 2019, your apps published on Google Play will need to support 64-bit architectures." (see https://developer.android.com/distribute/best-practices/develop/64-bit)
 ```
-./pcl-build-for-android.sh armeabi-v7a
-```
-
-### x86_64 (emulator)
-
-```
-./pcl-build-for-android.sh x86_64
+./pcl-build-for-android.sh armv7
 ```
 
 ## Example-app
