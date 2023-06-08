@@ -11,6 +11,7 @@ class PclConan(ConanFile):
     channel = "stable"
     license = "BSD"
     url = "http://www.pointclouds.org/"
+    exports_sources = ["no-build-binaries.patch"]
 
     def _to_android_abi(self, arch: str) -> str:
         if arch == "armv7":
@@ -76,6 +77,7 @@ class PclConan(ConanFile):
             f"{self.name}-{self.version}"
         )
 
+        tools.files.patch(self, patch_file="no-build-binaries.patch")
 
     def build(self):
         cmake = self._configure_cmake()
