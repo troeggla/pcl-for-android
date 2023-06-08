@@ -11,7 +11,6 @@ class PclConan(ConanFile):
     channel = "stable"
     license = "BSD"
     url = "http://www.pointclouds.org/"
-    exports_sources = ["no-pkg-config.patch"]
 
     def _to_android_abi(self, arch: str) -> str:
         if arch == "armv7":
@@ -29,17 +28,10 @@ class PclConan(ConanFile):
         print("COMPONENTS:")
         print(self.dependencies["boost"].cpp_info.components["filesystem"].serialize())
 
-        boost_include_dir = self.dependencies["boost"].cpp_info.includedirs[0]
-        boost_lib_dir = self.dependencies["boost"].cpp_info.libdirs[0]
-        # flann_include_dir = self.dependencies["flann"].cpp_info.includedirs[0]
-        # flann_lib_dir = self.dependencies["flann"].cpp_info.libdirs[0]
-        eigen_include_dir = path.join(
-            self.dependencies["eigen"].cpp_info.includedirs[0],
-            "eigen3"
-        )
-
         cmake.configure({
-            "Boost_NO_SYSTEM_PATHS": "ON",
+            "Boost_NO_SYSTEM_PATHS": "TRUE",
+            "Boost_NO_BOOST_CMAKE": "TRUE",
+            "Boost_USE_STATIC_LIBS": "TRUE",
             "PCL_SHARED_LIBS": "OFF",
             "PCL_BINARIES": "OFF",
             "WITH_CUDA": "OFF",
@@ -48,13 +40,7 @@ class PclConan(ConanFile):
             "WITH_PNG": "OFF",
             "WITH_QHULL": "OFF",
             "WITH_VTK": "OFF",
-            "Boost_NO_SYSTEM_PATHS": "TRUE",
-            "Boost_NO_BOOST_CMAKE": "TRUE",
-            "Boost_USE_STATIC_LIBS": "TRUE",
-            "EIGEN_INCLUDE_DIR": eigen_include_dir,
             "FLANN_USE_STATIC": "ON",
-            # "FLANN_INCLUDE_DIR": flann_include_dir,
-            # "FLANN_LIBRARY": f"{flann_lib_dir}/libflann_cpp_s.a;{flann_lib_dir}/liblz4.a"
         })
 
         return cmake
@@ -90,7 +76,6 @@ class PclConan(ConanFile):
             f"{self.name}-{self.version}"
         )
 
-        tools.files.patch(self, patch_file="no-pkg-config.patch")
 
     def build(self):
         cmake = self._configure_cmake()
