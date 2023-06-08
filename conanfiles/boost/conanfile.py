@@ -42,6 +42,14 @@ class BoostConan(ConanFile):
         if arch == "armv8": return "aarch64"
         return arch
 
+    def _to_build_os(self, os: str) -> str:
+        if os == "Linux":
+            return "linux"
+        elif os == "Macos":
+            return "darwin"
+
+        return os
+
     def _to_android_address_model(self, arch: str) -> str:
         if arch == "armv7": return "32"
         if arch == "armv8" or arch == "x86_64": return "64"
@@ -61,7 +69,13 @@ class BoostConan(ConanFile):
             ext = ""
 
         ndk_path = self.conf.get("tools.android:ndk_path")
-        path_to_clang_compiler = "{}/toolchains/llvm/prebuilt/darwin-x86_64/bin/{}-linux-android{}{}-clang++".format(ndk_path, self._to_android_arch(str(self.settings.arch)), ext, self.settings.os.api_level)
+        path_to_clang_compiler = "{}/toolchains/llvm/prebuilt/{}-x86_64/bin/{}-linux-android{}{}-clang++".format(
+            ndk_path,
+            self._to_build_os(self.settings_build.os),
+            self._to_android_arch(str(self.settings.arch)),
+            ext,
+            self.settings.os.api_level
+        )
 
         print("Compiler: {}".format(path_to_clang_compiler))
 
