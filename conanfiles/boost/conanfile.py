@@ -70,6 +70,8 @@ class BoostConan(ConanFile):
     license = "BSL-1.0"
     topics = ("libraries", "cpp")
     version = "1.76.0"
+    user = "pcl-android"
+    channel = "stable"
 
     settings = "os", "arch", "compiler", "build_type"
     options = {

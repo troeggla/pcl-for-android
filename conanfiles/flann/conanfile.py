@@ -16,6 +16,8 @@ class FlannConan(ConanFile):
     homepage = "https://www.cs.ubc.ca/research/flann/"
     license = "BSD-3-Clause"
     version = "1.9.2"
+    user = "pcl-android"
+    channel = "stable"
 
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"

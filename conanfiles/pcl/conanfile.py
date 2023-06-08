@@ -66,8 +66,8 @@ class PclConan(ConanFile):
         tools.cmake.cmake_layout(self)
 
     def requirements(self):
-        self.requires("boost/1.76.0")
-        self.requires("flann/1.9.2")
+        self.requires("boost/1.76.0@pcl-android/stable")
+        self.requires("flann/1.9.2@pcl-android/stable")
         self.requires("eigen/3.3.7")
 
     def source(self):
