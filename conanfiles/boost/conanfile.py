@@ -180,29 +180,7 @@ class BoostConan(ConanFile):
         # This is in the same theme as the notes above, re autolinking.
         self.cpp_info.components["headers"].requires.append("dynamic_linking")
 
-        # https://www.boost.org/doc/libs/1_73_0/more/getting_started/windows.html#library-naming
-        # libsuffix for MSVC:
-        # - system: ""
-        # - versioned: "-vc142-mt-d-x64-1_74"
-        # - tagged: "-mt-d-x64"
-        libsuffix_lut = {
-            "system": "",
-            "versioned": "{toolset}{threading}{abi}{arch}{version}",
-            "tagged": "{threading}{abi}{arch}",
-        }
-        libsuffix_data = {
-            "abi": "",
-            "ach": "",
-            "version": "",
-        }
-
-        debug_tag = "d" if self.settings.build_type == "Debug" else ""
-        abi = debug_tag
-        if abi:
-            libsuffix_data["abi"] = f"-{abi}"
-
         for module in self._dependencies["dependencies"]:
-            print("DEP:", module)
             self.cpp_info.components[module].set_property("cmake_target_name", "Boost::" + module)
             self.cpp_info.components[module].names["cmake_find_package"] = module
             self.cpp_info.components[module].names["cmake_find_package_multi"] = module
