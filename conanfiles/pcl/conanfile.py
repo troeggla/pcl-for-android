@@ -101,4 +101,12 @@ class PclConan(ConanFile):
         )
 
     def package_info(self):
+        self.cpp_info.set_property("cmake_file_name", "PCL")
+        self.cpp_info.set_property("cmake_target_name", "PCL::PCL")
+
+        self.cpp_info.filenames["cmake_find_package"] = "PCL"
+        self.cpp_info.filenames["cmake_find_package_multi"] = "PCL"
+        self.cpp_info.names["cmake_find_package"] = "PCL"
+        self.cpp_info.names["cmake_find_package_multi"] = "PCL"
+
         self.cpp_info.libs = tools.files.collect_libs(self)
