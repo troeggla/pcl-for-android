@@ -1,26 +1,22 @@
 #include <jni.h>
 #include <string>
+
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/kdtree/impl/kdtree_flann.hpp>
 #include <pcl/search/impl/kdtree.hpp>
 #include <pcl/search/impl/organized.hpp>
 #include <pcl/filters/impl/statistical_outlier_removal.hpp>
-#include <iostream>
 
 #include <android/log.h>
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "bashbug.example", __VA_ARGS__))
 
-/*
- * Example:
- * http://pointclouds.org/documentation/tutorials/writing_pcd.php#writing-pcd
- * http://pointclouds.org/documentation/tutorials/statistical_outlier.php
- */
+extern "C" JNIEXPORT jstring JNICALL Java_com_example_myapplication_MainActivity_stringFromJNI(
+        JNIEnv* env,
+        jobject /* this */) {
+    std::string hello = "Hello from C++! Point cloud size: ";
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_example_bashbug_example_MainActivity_pclExampleFunc(JNIEnv *env, jobject instance) {
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
@@ -39,10 +35,7 @@ Java_com_example_bashbug_example_MainActivity_pclExampleFunc(JNIEnv *env, jobjec
     }
 
     LOGI("pointcloud has size %lu", cloud->points.size());
+    hello.append(std::to_string(cloud->points.size()));
 
-    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
-    sor.setInputCloud(cloud);
-    sor.setMeanK(50);
-    sor.setStddevMulThresh (1.0);
-    sor.filter(*cloud_filtered);
+    return env->NewStringUTF(hello.c_str());
 }

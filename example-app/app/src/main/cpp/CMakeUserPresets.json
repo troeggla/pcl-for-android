@@ -1,0 +1,16 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/home/dis/AndroidStudioProjects/MyApplication/app/src/main/cpp/build/armv7/Debug/generators/CMakePresets.json",
+        "/home/dis/AndroidStudioProjects/MyApplication/app/src/main/cpp/build/armv8/Debug/generators/CMakePresets.json",
+        "/home/dis/AndroidStudioProjects/MyApplication/app/src/main/cpp/build/x86/Debug/generators/CMakePresets.json",
+        "/home/dis/AndroidStudioProjects/MyApplication/app/src/main/cpp/build/x86_64/Debug/generators/CMakePresets.json",
+        "/home/dis/AndroidStudioProjects/MyApplication/app/src/main/cpp/build/armv7/Release/generators/CMakePresets.json",
+        "/home/dis/AndroidStudioProjects/MyApplication/app/src/main/cpp/build/armv8/Release/generators/CMakePresets.json",
+        "/home/dis/AndroidStudioProjects/MyApplication/app/src/main/cpp/build/x86/Release/generators/CMakePresets.json",
+        "/home/dis/AndroidStudioProjects/MyApplication/app/src/main/cpp/build/x86_64/Release/generators/CMakePresets.json"
+    ]
+}

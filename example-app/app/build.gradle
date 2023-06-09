@@ -1,44 +1,81 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 
-android {
-    compileSdkVersion 28
-    defaultConfig {
-        applicationId "com.example.bashbug.example"
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++11"
+task conanInstall {
+    def buildDir = new File("app/build")
+    buildDir.mkdirs()
+    ["Debug", "Release"].each { String build_type ->
+        ["armv7", "armv8", "x86", "x86_64"].each { String arch ->
+            def cmd = "conan install " +
+                    "../src/main/cpp --profile android -s build_type=" + build_type + " -s arch=" + arch +
+                    " --build missing -c tools.cmake.cmake_layout:build_folder_vars=['settings.arch']"
+            print(">> ${cmd} \n")
+
+            def sout = new StringBuilder(), serr = new StringBuilder()
+            def proc = cmd.execute(null, buildDir)
+            proc.consumeProcessOutput(sout, serr)
+            proc.waitFor()
+            println "BLAG $sout $serr"
+            if (proc.exitValue() != 0) {
+                throw new Exception("out> $sout err> $serr" + "\nCommand: ${cmd}")
             }
         }
-
-        ndk {
-            abiFilters "arm64-v8a"
-        }
-
     }
+}
+
+android {
+    namespace 'com.example.myapplication'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.myapplication"
+        minSdk 26
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags '-std=c++17'
+                arguments("-DCMAKE_TOOLCHAIN_FILE=conan_android_toolchain.cmake")
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     externalNativeBuild {
         cmake {
-            path "src/main/cpp/CMakeLists.txt"
-            version "3.10.2"
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
         }
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
