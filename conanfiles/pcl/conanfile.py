@@ -31,7 +31,6 @@ class PclConan(ConanFile):
 
         cmake.configure({
             "Boost_NO_SYSTEM_PATHS": "TRUE",
-            "Boost_NO_BOOST_CMAKE": "TRUE",
             "Boost_USE_STATIC_LIBS": "TRUE",
             "PCL_SHARED_LIBS": "OFF",
             "PCL_BINARIES": "OFF",
@@ -41,8 +40,7 @@ class PclConan(ConanFile):
             "WITH_PNG": "OFF",
             "WITH_QHULL": "OFF",
             "WITH_VTK": "OFF",
-            "WITH_LIBUSB": "OFF",
-            "FLANN_USE_STATIC": "ON",
+            "WITH_LIBUSB": "OFF"
         })
 
         return cmake
