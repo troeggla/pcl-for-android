@@ -41,6 +41,7 @@ class PclConan(ConanFile):
             "WITH_PNG": "OFF",
             "WITH_QHULL": "OFF",
             "WITH_VTK": "OFF",
+            "WITH_LIBUSB": "OFF",
             "FLANN_USE_STATIC": "ON",
         })
 
