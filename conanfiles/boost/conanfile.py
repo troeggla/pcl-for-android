@@ -38,8 +38,13 @@ class BoostConan(ConanFile):
         return self._cached_dependencies
 
     def _to_android_arch(self, arch: str) -> str:
-        if arch == "armv7": return "armv7a"
-        if arch == "armv8": return "aarch64"
+        if arch == "armv7":
+            return "armv7a"
+        if arch == "armv8":
+            return "aarch64"
+        if arch == "x86":
+            return "i686"
+
         return arch
 
     def _to_build_os(self, os: str) -> str:
@@ -51,16 +56,16 @@ class BoostConan(ConanFile):
         return os
 
     def _to_android_address_model(self, arch: str) -> str:
-        if arch == "armv7": return "32"
-        if arch == "armv8" or arch == "x86_64": return "64"
+        if arch == "armv8" or arch == "x86_64":
+            return "64"
 
-        return None
+        return "32"
 
     def _to_boost_arch(self, arch: str) -> str:
-        if arch.startswith("arm") or arch == "aarch64": return "arm"
-        if arch.startswith("x86"): return "x86"
+        if arch.startswith("arm") or arch == "aarch64":
+            return "arm"
 
-        return None
+        return "x86"
 
     def _configure_user_config(self) -> None:
         if str(self.settings.arch) == "armv7":
