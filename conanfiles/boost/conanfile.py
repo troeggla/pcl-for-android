@@ -123,6 +123,7 @@ class BoostConan(ConanFile):
     def package(self):
         tools.files.copy(self, pattern="*.a", dst=path.join(self.package_folder, "lib"), src="{}/{}/lib".format(self.folder_name, self.settings.arch))
         tools.files.copy(self, pattern="*.so", dst=path.join(self.package_folder, "lib"), src="{}/{}/lib".format(self.folder_name, self.settings.arch))
+        tools.files.copy(self, pattern="*.so." + self.version, dst=path.join(self.package_folder, "lib"), src="{}/{}/lib".format(self.folder_name, self.settings.arch))
         tools.files.copy(self, pattern="*", dst=path.join(self.package_folder , "include/boost"), src="{}/boost".format(self.folder_name))
 
     def package_info(self):
