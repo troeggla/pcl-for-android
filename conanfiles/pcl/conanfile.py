@@ -12,6 +12,12 @@ class PclConan(ConanFile):
     license = "BSD"
     url = "http://www.pointclouds.org/"
     exports_sources = ["no-build-binaries.patch"]
+    options = {
+        "shared": [True, False],
+    }
+    default_options = {
+        "shared": False,
+    }
 
     def _to_android_abi(self, arch: str) -> str:
         if arch == "armv7":
@@ -32,7 +38,7 @@ class PclConan(ConanFile):
         cmake.configure({
             "Boost_NO_SYSTEM_PATHS": "TRUE",
             "Boost_USE_STATIC_LIBS": "TRUE",
-            "PCL_SHARED_LIBS": "OFF",
+            "PCL_SHARED_LIBS": "ON" if self.options.shared else "OFF",
             "PCL_BINARIES": "OFF",
             "WITH_CUDA": "OFF",
             "WITH_OPENGL": "OFF",
