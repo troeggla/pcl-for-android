@@ -14,6 +14,12 @@ class BoostConan(ConanFile):
     folder_name = "boost_{}".format(version.replace(".", "_"))
     user = "pcl-android"
     channel = "stable"
+    options = {
+        "shared": [True, False],
+    }
+    default_options = {
+        "shared": False,
+    }
 
     _cached_dependencies = None
 
@@ -96,7 +102,13 @@ class BoostConan(ConanFile):
         self.run("./bootstrap.sh")
 
     def _build_boost(self) -> None:
-        b2_comd = "./b2 link=static variant=release threading=multi --without-python --debug-configuration --abbreviate-paths architecture={} --stagedir={} target-os=android address-model={} abi=aapcs".format(self._to_boost_arch(str(self.settings.arch)), self.settings.arch, self._to_android_address_model(str(self.settings.arch)))
+        b2_comd = "./b2 link={} variant=release threading=multi --without-python --debug-configuration --abbreviate-paths architecture={} --stagedir={} target-os=android address-model={} abi=aapcs".format(
+            "shared" if self.options.shared else "static",
+            self._to_boost_arch(str(self.settings.arch)),
+            self.settings.arch,
+            self._to_android_address_model(str(self.settings.arch))
+        )
+
         self.run(b2_comd)
 
     def source(self):
@@ -110,6 +122,7 @@ class BoostConan(ConanFile):
 
     def package(self):
         tools.files.copy(self, pattern="*.a", dst=path.join(self.package_folder, "lib"), src="{}/{}/lib".format(self.folder_name, self.settings.arch))
+        tools.files.copy(self, pattern="*.so", dst=path.join(self.package_folder, "lib"), src="{}/{}/lib".format(self.folder_name, self.settings.arch))
         tools.files.copy(self, pattern="*", dst=path.join(self.package_folder , "include/boost"), src="{}/boost".format(self.folder_name))
 
     def package_info(self):
