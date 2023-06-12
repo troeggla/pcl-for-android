@@ -90,7 +90,7 @@ class BoostConan(ConanFile):
 
         print("Compiler: {}".format(path_to_clang_compiler))
 
-        compiler_flags = "-fPIC -std=c++11 -stdlib=libc++"
+        compiler_flags = "-fPIC -std=c++14 -stdlib=libc++"
         user_config = "using clang : androidos : {}\n: <cxxflags>\"{}\"\n;".format(path_to_clang_compiler, compiler_flags)
         path_to_user_config = "{}/{}/tools/build/src/user-config.jam".format(self.build_folder, self.folder_name)
 
