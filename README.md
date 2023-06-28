@@ -5,7 +5,7 @@
 
 ## Tested setup
 
-* Ubuntu 22.04, macOS 13.1
+* Ubuntu 22.04, macOS 13.1 (Intel)
 * Android SDK 25
 * conan 2.0.4
 
@@ -23,29 +23,18 @@ pip3 install conan ninja
 
 ## Cross-compilation
 
-For arm64-v8a with Android NDK r25c:
-
-- flann 1.9.2
-- lz4 1.9.4
-- boost 1.76.0
-- PCL 1.13.0 (Eigen 3.3.7 gets automatically installed)
-
-### arm64-v8a
+To start cross-compilation, run the provided script passing along the desired
+target architecture:
 
 ```
-./pcl-build-for-android.sh armv8
+./pcl-build-for-android.sh armv8|armv7|x86|x86_64
 ```
 
-### armeabi-v7a
+## Example app
 
-```
-./pcl-build-for-android.sh armv7
-```
+Set in app/build.gradle the abiFilters depending for which architectures you
+have cross-compiled. The default setup is arm64-v8a:
 
-## Example-app
-
-Set in app/build.gradle the abiFilters depending for which architectures you have cross-compiled.
-The default setup is arm64-v8a:
 ```
 android {
     compileSdkVersion 28
@@ -62,7 +51,9 @@ android {
     }
 ...
 ```
+
 E.g. set in app/build.gradle to support armeabi-v7a and emulator (x86_64):
+
 ```
 android {
     defaultConfig {
@@ -73,7 +64,9 @@ android {
     }
 ...
 ```
+
 Or to support all:
+
 ```
 android {
     defaultConfig {
@@ -84,12 +77,15 @@ android {
     }
 ...
 ```
+
 Now you can run the app and you will see in Logcat:
+
 ```
 I/bashbug.example: pointcloud has size 5
 ```
 
 ## A few details
+
 The CMake based example-app has conan fully integrated:
 
 ```
@@ -105,15 +101,19 @@ example-app/app/src/main
 ```
 
 ***conanfile.txt*** defines the project's dependency to PCL.
+
 ```
 [requires]
-pcl/1.9.1@bashbug/stable
+pcl/1.9.1@pcl-android/stable
 
 [generators]
 cmake_paths
 cmake_find_package
 ```
-***CMakeLists.txt*** includes cmake/conan.cmake which is a cmake integration of [conan](https://github.com/conan-io/cmake-conan/blob/develop/conan.cmake).
+
+***CMakeLists.txt*** includes cmake/conan.cmake which is a cmake integration of
+[conan](https://github.com/conan-io/cmake-conan/blob/develop/conan.cmake).
+
 ```
 include(${CMAKE_SOURCE_DIR}/cmake/conan.cmake)
 
@@ -126,11 +126,16 @@ conan_cmake_run(CONANFILE conanfile.txt
 include(${CMAKE_CURRENT_BINARY_DIR}/conan_paths.cmake)
 
 ```
+
 `conan_cmake_run()` does two things:
 * It parses the conanfile.txt what dependencies it should install.
-* In conanfile.txt are two generators defined cmake_paths and cmake_find_package.
-  * `cmake_paths` creates conan_paths.cmake within the build folder. This adds to the `CMAKE_MODULE_PATH` and `CMAKE_PREFIX_PATH` the search path for the cross-compiled libraries.
-  * `cmake_find_package` creates auto-generated Find*.cmake files within the build folder .externalNativeBuild/cmake/debug/arm64-v8a
+* In conanfile.txt are two generators defined `cmake_paths` and
+  `cmake_find_package`.
+  * `cmake_paths` creates conan_paths.cmake within the build folder. This adds
+    to the `CMAKE_MODULE_PATH` and `CMAKE_PREFIX_PATH` the search path for the
+    cross-compiled libraries.
+  * `cmake_find_package` creates auto-generated Find*.cmake files within the
+    build folder .externalNativeBuild/cmake/debug/arm64-v8a
 
 ```
 example-app/app/.externalNativeBuild
@@ -153,6 +158,7 @@ example-app/app/.externalNativeBuild
             │   └── libnative-lib.so
             └── rules.ninja
 ```
+
 This Find*.cmake files resolve `find_package` calls in CMakeLists.txt of cross-compiled libraries and provide targets like `pcl::pcl`:
 
 ```
