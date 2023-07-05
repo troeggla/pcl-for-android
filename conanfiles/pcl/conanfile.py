@@ -1,4 +1,5 @@
 from conan import ConanFile, tools
+from conan.tools.files import apply_conandata_patches, export_conandata_patches
 from os import path
 
 
@@ -49,6 +50,9 @@ class PclConan(ConanFile):
 
         return cmake
 
+    def export_sources(self):
+        export_conandata_patches(self)
+
     def generate(self):
         deps = tools.cmake.CMakeDeps(self)
         deps.set_property("boost", "cmake_target_name", "Boost::boost")
@@ -80,7 +84,7 @@ class PclConan(ConanFile):
             f"{self.name}-{self.version}"
         )
 
-        tools.files.patch(self, patch_file="no-build-binaries.patch")
+        apply_conandata_patches(self)
 
     def build(self):
         cmake = self._configure_cmake()

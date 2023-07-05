@@ -1,0 +1,2 @@
+patches:
+  - patch_file: "patches/0001-no-build-binaries.patch"

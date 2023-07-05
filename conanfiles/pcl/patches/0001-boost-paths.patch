@@ -1,0 +1,25 @@
+diff --git a/cmake/pcl_find_boost.cmake b/cmake/pcl_find_boost.cmake
+index b60fafae4..008084bda 100644
+--- a/cmake/pcl_find_boost.cmake
++++ b/cmake/pcl_find_boost.cmake
+@@ -1,4 +1,6 @@
+ # Find and set Boost flags
++message(STATUS "SYSTEM: " ${Boost_NO_SYSTEM_PATHS})
++message(STATUS "DATETIME: " ${Boost_DATE_TIME_LIBRARY})
+ 
+ # If we would like to compile against a dynamically linked Boost
+ if(PCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32 AND WIN32)
+@@ -27,7 +29,11 @@ endif()
+ 
+ # Required boost modules
+ set(BOOST_REQUIRED_MODULES filesystem date_time iostreams system)
+-find_package(Boost 1.65.0 REQUIRED COMPONENTS ${BOOST_REQUIRED_MODULES})
++find_package(Boost 1.70.0 REQUIRED COMPONENTS ${BOOST_REQUIRED_MODULES})
++
++message(STATUS "FOUND: " ${Boost_FOUND})
++message(STATUS "INCLUDE: " ${Boost_INCLUDE_DIRS})
++message(STATUS "LIB: " ${Boost_LIBRARY_DIRS})
+ 
+ if(Boost_FOUND)
+   set(BOOST_FOUND TRUE)
+
