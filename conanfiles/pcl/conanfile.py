@@ -32,8 +32,6 @@ class PclConan(ConanFile):
 
     def _configure_cmake(self):
         cmake = tools.cmake.CMake(self)
-        print("COMPONENTS:")
-        print(self.dependencies["boost"].cpp_info.components["filesystem"].serialize())
 
         cmake.configure({
             "Boost_NO_SYSTEM_PATHS": "TRUE",
