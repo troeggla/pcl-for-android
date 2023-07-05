@@ -206,7 +206,7 @@ index b60fafae4..4e159cf95 100644
  # Required boost modules
  set(BOOST_REQUIRED_MODULES filesystem date_time iostreams system)
 -find_package(Boost 1.65.0 REQUIRED COMPONENTS ${BOOST_REQUIRED_MODULES})
-+find_package(Boost 1.70.0 REQUIRED COMPONENTS ${BOOST_REQUIRED_MODULES} HINTS "/Users/tom/.conan2/p/boost6861fed552738/p/lib")
++find_package(Boost 1.70.0 REQUIRED COMPONENTS ${BOOST_REQUIRED_MODULES})
 +
 +message(STATUS "FOUND: " ${Boost_FOUND})
 +message(STATUS "INCLUDE: " ${Boost_INCLUDE_DIRS})
