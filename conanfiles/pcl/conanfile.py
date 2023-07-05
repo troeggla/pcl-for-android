@@ -1,6 +1,6 @@
 from conan import ConanFile, tools
 from conan.tools.files import apply_conandata_patches, export_conandata_patches
-from os import path
+from os import path, scandir
 
 
 class PclConan(ConanFile):
@@ -34,6 +34,9 @@ class PclConan(ConanFile):
     def _configure_cmake(self):
         cmake = tools.cmake.CMake(self)
 
+        boost_libdir = self.dependencies["boost"].cpp_info.libdirs[0]
+        boost_libraries = list([f.path for f in scandir(boost_libdir)])
+
         cmake.configure({
             "Boost_NO_SYSTEM_PATHS": "TRUE",
             "Boost_USE_STATIC_LIBS": "TRUE",
@@ -45,7 +48,8 @@ class PclConan(ConanFile):
             "WITH_PNG": "OFF",
             "WITH_QHULL": "OFF",
             "WITH_VTK": "OFF",
-            "WITH_LIBUSB": "OFF"
+            "WITH_LIBUSB": "OFF",
+            "BOOST_LIBRARIES": ";".join(boost_libraries)
         })
 
         return cmake
