@@ -1,0 +1,13 @@
+diff --git a/io/CMakeLists.txt b/io/CMakeLists.txt
+index 9040f438a..238fb906e 100644
+--- a/io/CMakeLists.txt
++++ b/io/CMakeLists.txt
+@@ -212,6 +212,7 @@ endif()
+ PCL_ADD_INCLUDES("${SUBSYS_NAME}" "${SUBSYS_NAME}/ply" ${PLY_INCLUDES})
+ target_include_directories(pcl_io_ply PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ target_link_libraries(pcl_io_ply Boost::boost)
++target_link_libraries(pcl_io_ply ${BOOST_LIBRARIES})
+ 
+ set(srcs
+   src/debayer.cpp
+
