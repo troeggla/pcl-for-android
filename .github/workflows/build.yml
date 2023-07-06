@@ -1,0 +1,46 @@
+name: Build and publish libraries
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build_armv7:
+    name: Build shared library for ARMv7
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install build tools
+        run: sudo apt update && sudo apt install -y cmake make python3
+
+      - name: Install package manager
+        run: pip3 install conan ninja
+
+      - name: Detect build profile
+        run: conan profile detect
+
+      - name: Download and extract Android NDK
+        run: curl https://dl.google.com/android/repository/android-ndk-r25c-linux.zip > android-ndk.zip && unzip android-ndk.zip
+
+      - name: Create Android profile
+        run: |
+          echo "include(default)" > ~/.conan2/profiles/android
+          echo "[settings]" >> ~/.conan2/profiles/android
+          echo "os=Android" >> ~/.conan2/profiles/android
+          echo "os.api_level=26" >> ~/.conan2/profiles/android
+          echo "compiler=clang" >> ~/.conan2/profiles/android
+          echo "compiler.version=14" >> ~/.conan2/profiles/android
+          echo "compiler.libcxx=c++_static" >> ~/.conan2/profiles/android
+          echo "compiler.cppstd=14" >> ~/.conan2/profiles/android
+          echo "[conf]" >> ~/.conan2/profiles/android
+          echo "tools.android:ndk_path=`pwd`/android-ndk-r25c/" >> ~/.conan2/profiles/android
+
+      - name: Build package for ARMv7
+        run: bash pcl-build-for-android.sh armv7
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: armv7
+          path: ~/.conan2/p/b/pcl*/p/lib/
