@@ -5,9 +5,12 @@
 
 ## Tested setup
 
-* Ubuntu 22.04, macOS 13.1 (Intel)
+* Ubuntu 22.04
 * Android SDK 25
 * conan 2.0.4
+
+The setup also works on macOS 13.1, except building for ARMv8 fails because
+of an issue with the clang compiler.
 
 ## Install
 
@@ -27,8 +30,11 @@ To start cross-compilation, run the provided script passing along the desired
 target architecture:
 
 ```
-./pcl-build-for-android.sh armv8|armv7|x86|x86_64
+./pcl-build-for-android.sh armv8|armv7|x86|x86_64 [shared]
 ```
+
+Appending the option `shared` will build shared libraries instead of static
+ones.
 
 ## Example app
 
