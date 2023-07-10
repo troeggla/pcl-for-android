@@ -18,11 +18,37 @@ of an issue with the clang compiler.
 apt install cmake git make python3
 ```
 
-Install [conan](https://docs.conan.io/en/latest/installation.html) and ninja
+Install [conan](https://docs.conan.io/en/latest/installation.html) and ninja.
 
 ```
 pip3 install conan ninja
 ```
+
+Then, download the latest Android NDK from the [Android website](https://developer.android.com/ndk/downloads)
+and unzip it.
+
+After that, run `conan profile detect` to detect the default profile and create
+an Android compilation profile under `~/.conan2/profiles/android` with the
+following contents:
+
+```
+include(default)
+
+[settings]
+os=Android
+os.api_level=26
+compiler=clang
+compiler.version=14
+compiler.libcxx=c++_static
+compiler.cppstd=14
+
+[conf]
+tools.android:ndk_path=[ndk_path]
+
+```
+
+Replacing `[ndk_path]` with the path at which you unzipped the downloaded
+Android NDK.
 
 ## Cross-compilation
 
