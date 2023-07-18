@@ -115,7 +115,7 @@ class PclConan(ConanFile):
             tools.files.copy(
                 self,
                 pattern="*.so",
-                dst=path.join(self.recipe_folder, "lib"),
+                dst=path.join(self.package_folder, "lib"),
                 src=path.join(self.build_folder, "lib")
             )
 
