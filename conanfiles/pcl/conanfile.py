@@ -39,7 +39,6 @@ class PclConan(ConanFile):
 
         cmake.configure({
             "Boost_NO_SYSTEM_PATHS": "TRUE",
-            "Boost_USE_STATIC_LIBS": "TRUE",
             "PCL_SHARED_LIBS": "ON" if self.options.shared else "OFF",
             "PCL_BINARIES": "OFF",
             "WITH_CUDA": "OFF",
