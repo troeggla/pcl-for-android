@@ -1,6 +1,6 @@
 from conan import ConanFile, tools
 from conan.tools.files import apply_conandata_patches, export_conandata_patches
-from os import path, scandir
+from os import path, scandir, getcwd
 
 
 class PclConan(ConanFile):
@@ -111,6 +111,15 @@ class PclConan(ConanFile):
             dst=path.join(self.package_folder, "include"),
             src=path.join(self.build_folder, "include")
         )
+
+        if self.options.shared:
+            tools.files.copy(
+                self,
+                pattern="*.so",
+                dst=path.join(self.recipe_folder, "lib"),
+                src=path.join(self.build_folder, "lib")
+            )
+
 
     def package_info(self):
         self.cpp_info.set_property("cmake_file_name", "PCL")
