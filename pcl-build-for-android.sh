@@ -33,6 +33,28 @@ echo -e "###########################################\033[m\n\n"
 if [ $2 == "shared" ]; then
   echo "Building shared PCL library..."
   conan create conanfiles/pcl --profile android -s arch=$ARCH -o shared=True --build=missing
+
+  echo "Copying compiled artifacts..."
+  conan list 'pcl#:*' |sed 's/ //g' > package_info.txt
+
+  package_name=`cat package_info.txt |head -n3 |tail -n1`
+  revision_id=`cat package_info.txt |head -n5 |tail -n1 |sed 's/(.*)//'`
+  package_id=`cat package_info.txt |head -n7 |tail -n1`
+
+  package_folder=`conan cache path ${package_name}#${revision_id}:${package_id}`
+
+  if [ -d "dist/${ARCH}" ]; then
+    echo "Deleting outdated dist directory..."
+    rm -r dist/${ARCH}
+  fi
+
+  mkdir -p dist/${ARCH}/lib dist/${ARCH}/include
+  cp ${package_folder}/lib/*.so dist/${ARCH}/lib
+  cp -r ${package_folder}/include/* dist/${ARCH}/include
+
+  rm package_info.txt
+
+  echo "DONE!"
 else
   echo "Building static PCL library..."
   conan create conanfiles/pcl --profile android -s arch=$ARCH --build=missing
